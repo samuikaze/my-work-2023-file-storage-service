@@ -67,8 +67,8 @@ class FileRepository extends BaseRepository
             ->where(function ($query) use ($files) {
                 foreach ($files as $file) {
                     $query->orWhere(function ($query_clause) use ($file) {
-                        $query_clause->where('file.folder', $file['folder'])
-                            ->where('file.filename', $file['filename']);
+                        $query_clause->where('files.folder', $file['folder'])
+                            ->where('files.filename', $file['filename']);
                     });
                 }
             })
