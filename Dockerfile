@@ -26,7 +26,7 @@ RUN apk update \
         # libressl-dev \
         # libxml2-dev \
         # ZIP 功能
-        # libzip-dev \
+        libzip-dev \
     && rm -rf /var/cache/apk/* \
     # 郵件功能
     # && docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
@@ -39,7 +39,7 @@ RUN apk update \
         # SOAP 相關功能
         # soap \
         # ZIP 功能
-        # zip \
+        zip \
     && mkdir /var/run/php
 
 WORKDIR /usr/share/nginx/html

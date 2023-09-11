@@ -1,22 +1,35 @@
-# Lumen 9 With PHP 8.2 Template
+# 檔案儲存服務
 
-這是一個使用 PHP 8.2.8 版的 Lumen 9 模板專案，用於快速起始新的專案用
+> [返回根目錄](https://github.com/samuikaze/my-work-2023)
 
-## TODO
+這是檔案儲存服務的專案，使用 Lumen Framework (PHP) 撰寫而成
 
-- 升級 Lumen Framework 至 10.0 版
+## 說明
 
-## 使用說明
+由於後端拆分許多專案，針對檔案儲存需要有一個服務專門處理這類需求，因而有此專案的產生。
 
-1. 郵件
+## 事前準備
 
-    如需寄出郵件，請先執行 `composer require illuminate/mail` 指令安裝郵件功能，Dockerfile 也要將相關的指令打開才可以使用，其使用方式與 Laravel 相同。
+使用本專案前請先安裝以下軟體
 
-## 參考資料
+- php 8.1 或以上
+- composer 2.0 或以上
+- MySQL 或 MariaDB
+- Nginx 或 Apache
 
-- [php - Official Image | Docker Hub](https://hub.docker.com/_/php)
-- [Lumen framework](https://lumen.laravel.com/docs/9.x)
-- [How to set up file permissions for Laravel?](https://stackoverflow.com/a/37266353)
-- [Laravel9 Production環境容器化](https://ciao-chung.com/page/article/laravel9-production-dockerize)
-- [Linux: PHP-FPM, Docker, STDOUT and STDERR – no an application’s error logs](https://devpress.csdn.net/linux/62eba63f648466712833a89c.html)
-- [Bearer Authorization setup](https://github.com/DarkaOnLine/SwaggerLume/issues/70#issuecomment-489388479)
+## 線上展示
+
+準備中 ...
+
+## 本機除錯
+
+可以遵循以下步驟在本機進行除錯或檢視
+
+> ⚠️請注意，`.env` 檔中的相關設定請依據需求作修改
+
+1. `git clone` 將本專案 clone 到本機
+2. 打開終端機，切換到本專案資料夾
+3. 執行指令 `composer install && composer dump-autoload`
+4. 啟動 `nginx` 或 `Apache` 伺服器
+
+  > 也可使用 `php artisan serve` 啟動服務，但此方式在 CORS 預檢請求會得到 404 回應，目前仍未找出問題...
