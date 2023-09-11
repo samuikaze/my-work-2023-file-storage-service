@@ -2,23 +2,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: <APPLICATION_NAME>
+  name: file-storage-service-backend
   labels:
-    app: <APPLICATION_NAME>
-  namespace: <NAMESPACE>
+    app: file-storage-service-backend
+  namespace: smkz-for-work
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: <APPLICATION_NAME>
+      app: file-storage-service-backend
   template:
     metadata:
       labels:
-        app: <APPLICATION_NAME>
+        app: file-storage-service-backend
     spec:
       containers:
-        - name: <APPLICATION_NAME>
-          image: <REGISTRY_URL>/<IMAGE_NAME>:latest
+        - name: file-storage-service-backend
+          image: $secrets.REGISTRY_URL/file-storage-service-backend:latest
           resources:
             requests:
               memory: 512Mi
@@ -29,18 +29,54 @@ spec:
           ports:
             - containerPort: 80
               protocol: TCP
+          env:
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: file-storage-service-secrets
+                  key: database.host
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: file-storage-service-configs
+                  key: database.port
+            - name: DB_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: file-storage-service-configs
+                  key: database.name
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: file-storage-service-secrets
+                  key: database.username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: file-storage-service-secrets
+                  key: database.password
+            - name: SINGLE_SIGN_ON_BACKEND
+              valueFrom:
+                configMapKeyRef:
+                  name: file-storage-service-configs
+                  key: services.singlesignon
+            - name: REQUEST_CLIENT_VERIFY_SSL
+              valueFrom:
+                configMapKeyRef:
+                  name: file-storage-service-configs
+                  key: request.verifyssl
 
 ---
 # service.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: <APPLICATION_NAME>
-  namespace: <NAMESPACE>
+  name: file-storage-service-backend
+  namespace: smkz-for-work
 spec:
   type: ClusterIP
   selector:
-    app: <APPLICATION_NAME>
+    app: file-storage-service-backend
   ports:
     - protocol: TCP
       port: 80
