@@ -8,6 +8,7 @@
         "php": "^8.0",
         "darkaonline/swagger-lume": "^9.0",
         "doctrine/annotations": "^1.0",
+        "guzzlehttp/guzzle": "^7.8",
         "laravel/lumen-framework": "^9.0",
         "ramsey/uuid": "^4.7"
     },
