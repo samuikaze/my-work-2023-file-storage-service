@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Virtual\Resources;
+namespace App\Virtual\Requests;
 
 /**
  * 分塊上傳檔案請求 DTO

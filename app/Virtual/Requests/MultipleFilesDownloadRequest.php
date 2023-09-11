@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Virtual\Resources;
+namespace App\Virtual\Requests;
 
 /**
  * 多檔包 Zip 下載請求
