@@ -29,7 +29,7 @@ class FileRepository extends BaseRepository
     protected function baseGetFile(): Builder
     {
         return $this->model
-            ->where('files.is_valid', 1);
+            ->where('files.status', 1);
     }
 
     /**

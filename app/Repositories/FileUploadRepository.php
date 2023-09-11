@@ -54,7 +54,7 @@ class FileUploadRepository extends BaseRepository
         return $this->model
             ->where('user_id', $user_id)
             ->where('filename', $filename)
-            ->where('is_finished', 1)
+            ->where('status', 1)
             ->first();
     }
 }
