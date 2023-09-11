@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Virtual\Models;
+namespace App\Virtual\Responses;
 
 /**
  * 取得檔案資訊回應酬載
