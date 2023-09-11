@@ -16,6 +16,10 @@ spec:
       labels:
         app: file-storage-service-backend
     spec:
+      volumes:
+        - name: files-volume
+          persistentVolumeClaim:
+            claimName: file-storage-service-pvc
       containers:
         - name: file-storage-service-backend
           image: $secrets.REGISTRY_URL/file-storage-service-backend:latest
@@ -65,6 +69,16 @@ spec:
                 configMapKeyRef:
                   name: file-storage-service-configs
                   key: request.verifyssl
+          volumeMounts:
+            - mountPath: "/usr/share/nginx/html/storage/app/files"
+              name: files-volume
+              subPath: files
+            - mountPath: "/usr/share/nginx/html/storage/app/temps"
+              name: files-volume
+              subPath: temps
+            - mountPath: "/usr/share/nginx/html/storage/app/zips"
+              name: files-volume
+              subPath: zips
 
 ---
 # service.yaml
