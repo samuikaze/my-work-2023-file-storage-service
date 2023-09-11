@@ -84,9 +84,9 @@ $app->middleware([
     App\Http\Middleware\HandleCorsHeaders::class,
 ]);
 
-// $app->routeMiddleware([
-//     'auth' => App\Http\Middleware\Authenticate::class,
-// ]);
+$app->routeMiddleware([
+    'verify.auth' => App\Http\Middleware\VerifyAuthentication::class,
+]);
 
 /*
 |--------------------------------------------------------------------------
