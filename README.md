@@ -19,7 +19,7 @@
 
 ## 線上展示
 
-準備中 ...
+- [點此檢視 Swagger 展示](https://syskzworks.ddns.net/forwork/services/filestorageservice/api/swagger)
 
 ## 本機除錯
 
