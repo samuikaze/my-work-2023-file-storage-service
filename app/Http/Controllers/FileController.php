@@ -40,6 +40,83 @@ class FileController extends Controller
     }
 
     /**
+     * 單檔直接上傳
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     *
+     * @OA\Post(
+     *   path="/api/v1/file/upload",
+     *   summary="單檔直接上傳",
+     *   tags={"FileStorage v1"},
+     *   security={{ "apiAuth": {} }},
+     *   @OA\RequestBody(
+     *     required=true,
+     *     @OA\MediaType(
+     *       mediaType="multipart/form-data",
+     *       @OA\Schema(
+     *         ref="#/components/schemas/SingleFileUploadRequest"
+     *       )
+     *     ),
+     *   ),
+     *   @OA\Response(
+     *     response="200",
+     *     description="單檔上傳成功",
+     *     @OA\JsonContent(
+     *       allOf={
+     *         @OA\Schema(ref="#/components/schemas/BaseResponse"),
+     *         @OA\Schema(
+     *           @OA\Property(
+     *             property="data",
+     *             type="object"
+     *           )
+     *         )
+     *       }
+     *     )
+     *   ),
+     *   @OA\Response(
+     *     response="400",
+     *     description="資料格式不正確或上傳檔案過程中發生可預期的錯誤",
+     *   ),
+     *   @OA\Response(
+     *     response="500",
+     *     description="上傳檔案過程中發生不可預期的錯誤",
+     *   )
+     * )
+     */
+    public function singleUploadFile(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'uploadId' => ['required', 'string', 'uuid'],
+            'filename' => ['required', 'string'],
+            'file' => ['required', 'file'],
+        ]);
+
+        if ($validator->fails()) {
+            return $this->response(
+                error: $validator->errors(),
+                status: self::HTTP_BAD_REQUEST
+            );
+        }
+
+        try {
+            $this->file_service->singleFileUpload(
+                $request->input('authorization.id'),
+                $request->input('uploadId'),
+                $request->input('filename'),
+                $request->file('file')
+            );
+        } catch (FileException $e) {
+            return $this->response(
+                error: $e->getMessage(),
+                status: self::HTTP_BAD_REQUEST
+            );
+        }
+
+        return $this->response();
+    }
+
+    /**
      * 分塊上傳檔案
      *
      * @param \Illuminate\Http\Request $request
@@ -52,9 +129,12 @@ class FileController extends Controller
      *   security={{ "apiAuth": {} }},
      *   @OA\RequestBody(
      *     required=true,
-     *     @OA\JsonContent(
-     *       ref="#/components/schemas/ChunkFileUploadRequest"
-     *     )
+     *     @OA\MediaType(
+     *       mediaType="multipart/form-data",
+     *       @OA\Schema(
+     *         ref="#/components/schemas/ChunkFileUploadRequest"
+     *       )
+     *     ),
      *   ),
      *   @OA\Response(
      *     response="200",
