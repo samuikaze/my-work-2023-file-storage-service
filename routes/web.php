@@ -23,6 +23,8 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
     $router->post('/files/download', 'FileController@getMultipleFiles');
     // 需要經過驗證的路由
     $router->group(['middleware' => ['verify.auth']], function () use ($router) {
+        // 單檔直接上傳
+        $router->post('/file/upload', 'FileController@singleUploadFile');
         // 分塊上傳
         $router->post('/file/chunk', 'FileController@chunkUploadFile');
         // 合併分塊

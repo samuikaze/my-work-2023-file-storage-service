@@ -57,6 +57,50 @@ class FileService
     }
 
     /**
+     * 單檔上傳檔案
+     *
+     * @param int $user_id 使用者帳號 PK
+     * @param string $upload_id 上傳階段唯一識別碼
+     * @param string $filename 檔案名稱
+     * @param \Illuminate\Http\UploadedFile $file 分塊檔案
+     * @return void
+     *
+     * @throws \Symfony\Component\HttpFoundation\File\Exception\FileException
+     */
+    public function singleFileUpload(int $user_id, string $upload_id, string $filename, UploadedFile $file): void
+    {
+        /** @var string 暫存資料夾名稱 */
+        $temp_folder = Uuid::uuid4()->toString();
+        /** @var \App\Models\FileUpload */
+        $upload_record = $this->file_upload_repository->create([
+            'user_id' => $user_id,
+            'upload_id' => $upload_id,
+            'folder' => $temp_folder,
+            'filename' => $filename,
+            'status' => IsFinish::FINISHED->value
+        ]);
+
+        /** @var string 顯示的資料夾名稱 */
+        $display_folder = Uuid::uuid4()->toString();
+        /** @var string 儲存資料夾名稱 */
+        $save_folder = Uuid::uuid4()->toString();
+        /** @var string 檔案名稱 */
+        $save_filename = Uuid::uuid4()->toString();
+
+        $final_file = Utils::composePath(PathType::SAVE_PATH, $save_folder);
+        $file->move($final_file, $save_filename);
+
+        $this->file_repository->create([
+            'user_id' => $user_id,
+            'folder' => $save_folder,
+            'filename' => $save_filename,
+            'display_folder' => $display_folder,
+            'original_filename' => Utils::trimFilename($upload_record->filename),
+            'status' => 1,
+        ]);
+    }
+
+    /**
      * 分塊上傳檔案
      *
      * @param int $user_id 使用者帳號 PK
@@ -91,7 +135,7 @@ class FileService
         if ($is_last) {
             $this->file_upload_repository->safeUpdate(
                 $upload_record->id,
-                ['is_finished' => IsFinish::FINISHED->value]
+                ['status' => IsFinish::FINISHED->value]
             );
         }
 
