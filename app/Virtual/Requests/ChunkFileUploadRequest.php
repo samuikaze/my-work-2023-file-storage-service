@@ -44,7 +44,9 @@ class ChunkFileUploadRequest
      * @var \Illuminate\Http\UploadedFile
      *
      * @OA\Property(
-     *   description="經切塊後的檔案"
+     *   description="經切塊後的檔案",
+     *   format="binary",
+     *   type="string"
      * )
      */
     public $chunk;
