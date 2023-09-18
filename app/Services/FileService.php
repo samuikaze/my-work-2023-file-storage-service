@@ -63,11 +63,11 @@ class FileService
      * @param string $upload_id 上傳階段唯一識別碼
      * @param string $filename 檔案名稱
      * @param \Illuminate\Http\UploadedFile $file 分塊檔案
-     * @return void
+     * @return array<string, string|int>
      *
      * @throws \Symfony\Component\HttpFoundation\File\Exception\FileException
      */
-    public function singleFileUpload(int $user_id, string $upload_id, string $filename, UploadedFile $file): void
+    public function singleFileUpload(int $user_id, string $upload_id, string $filename, UploadedFile $file): array
     {
         /** @var string 暫存資料夾名稱 */
         $temp_folder = Uuid::uuid4()->toString();
@@ -90,7 +90,7 @@ class FileService
         $final_file = Utils::composePath(PathType::SAVE_PATH, $save_folder);
         $file->move($final_file, $save_filename);
 
-        $this->file_repository->create([
+        $uploaded_file = $this->file_repository->create([
             'user_id' => $user_id,
             'folder' => $save_folder,
             'filename' => $save_filename,
@@ -98,6 +98,11 @@ class FileService
             'original_filename' => Utils::trimFilename($upload_record->filename),
             'status' => 1,
         ]);
+
+        return [
+            'id' => $uploaded_file->id,
+            'path' => $uploaded_file->display_folder . '/' . $uploaded_file->original_filename
+        ];
     }
 
     /**
@@ -152,12 +157,12 @@ class FileService
      *
      * @param string $upload_id 上傳階段唯一識別碼
      * @param int $user_id 使用者帳號 PK
-     * @return void
+     * @return array<string, string|int>
      *
      * @throws \App\Exceptions\EntityNotFoundException
      * @throws \App\Exceptions\IOException
      */
-    public function mergeFile(string $upload_id): void
+    public function mergeFile(string $upload_id): array
     {
         $file = $this->file_upload_repository->findUploadRecordByUploadId($upload_id);
 
@@ -200,7 +205,7 @@ class FileService
             }
         }
 
-        $this->file_repository->create([
+        $uploaded_file = $this->file_repository->create([
             'user_id' => $file->user_id,
             'folder' => $save_folder,
             'filename' => $save_filename,
@@ -211,6 +216,11 @@ class FileService
 
         Utils::GCSpecificPath($gc_path);
         $this->file_upload_repository->delete($file->id);
+
+        return [
+            'id' => $uploaded_file->id,
+            'path' => $uploaded_file->display_folder . '/' . $uploaded_file->original_filename
+        ];
     }
 
     /**

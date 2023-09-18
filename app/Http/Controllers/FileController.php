@@ -68,7 +68,7 @@ class FileController extends Controller
      *         @OA\Schema(
      *           @OA\Property(
      *             property="data",
-     *             type="object"
+     *             ref="#/components/schemas/FileUploadedResponse"
      *           )
      *         )
      *       }
@@ -100,7 +100,7 @@ class FileController extends Controller
         }
 
         try {
-            $this->file_service->singleFileUpload(
+            $uploaded_file = $this->file_service->singleFileUpload(
                 $request->input('authorization.id'),
                 $request->input('uploadId'),
                 $request->input('filename'),
@@ -113,7 +113,7 @@ class FileController extends Controller
             );
         }
 
-        return $this->response();
+        return $this->response(data: $uploaded_file);
     }
 
     /**
@@ -224,8 +224,7 @@ class FileController extends Controller
      *         @OA\Schema(
      *           @OA\Property(
      *             property="data",
-     *             type="object",
-     *             example={}
+     *             ref="#/components/schemas/FileUploadedResponse"
      *           )
      *         )
      *       }
@@ -255,7 +254,7 @@ class FileController extends Controller
         }
 
         try {
-            $this->file_service->mergeFile($request->input('uploadId'));
+            $uploaded_file = $this->file_service->mergeFile($request->input('uploadId'));
         } catch (IOException | EntityNotFoundException $e) {
             return $this->response(
                 error: $e->getMessage(),
@@ -263,7 +262,7 @@ class FileController extends Controller
             );
         }
 
-        return $this->response();
+        return $this->response(data: $uploaded_file);
     }
 
     /**
