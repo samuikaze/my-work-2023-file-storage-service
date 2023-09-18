@@ -33,3 +33,7 @@
 4. 啟動 `nginx` 或 `Apache` 伺服器
 
   > 也可使用 `php artisan serve` 啟動服務，但此方式在 CORS 預檢請求會得到 404 回應，目前仍未找出問題...
+
+## 參考資料
+
+- [Examples - DarkaOnLine/L5-Swagger](https://github.com/DarkaOnLine/L5-Swagger/wiki/Examples)

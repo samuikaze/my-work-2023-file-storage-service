@@ -44,7 +44,9 @@ class SingleFileUploadRequest
      * @var \Illuminate\Http\UploadedFile
      *
      * @OA\Property(
-     *   description="要上傳的檔案"
+     *   description="要上傳的檔案",
+     *   format="binary",
+     *   type="string"
      * )
      */
     public $file;
