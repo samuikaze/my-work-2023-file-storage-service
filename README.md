@@ -37,3 +37,4 @@
 ## 參考資料
 
 - [Examples - DarkaOnLine/L5-Swagger](https://github.com/DarkaOnLine/L5-Swagger/wiki/Examples)
+- [Missing file browser in "Try it out" for multipart/form file uploads](https://github.com/swagger-api/swagger-ui/issues/3784)
