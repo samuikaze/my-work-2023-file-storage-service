@@ -38,3 +38,7 @@
 
 - [Examples - DarkaOnLine/L5-Swagger](https://github.com/DarkaOnLine/L5-Swagger/wiki/Examples)
 - [Missing file browser in "Try it out" for multipart/form file uploads](https://github.com/swagger-api/swagger-ui/issues/3784)
+- [securityContext fsGroup has no effect](https://github.com/rancher/local-path-provisioner/issues/41)
+- [chown: changing ownership of '/data/db': Operation not permitted](https://stackoverflow.com/a/51203031)
+- [How can I find my User ID (UID) from terminal?](https://askubuntu.com/a/468239)
+- [Init Containers in Kubernetes](https://www.baeldung.com/linux/kubernetes-init-containers)
