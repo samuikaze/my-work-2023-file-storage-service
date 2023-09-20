@@ -79,9 +79,6 @@ spec:
             - mountPath: "/usr/share/nginx/html/storage/app/zips"
               name: files-volume
               subPath: zips
-      securityContext:
-        runAsGroup: www-data
-        fsGroup: www-data
 
 ---
 # service.yaml
