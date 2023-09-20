@@ -80,8 +80,8 @@ spec:
               name: files-volume
               subPath: zips
       securityContext:
-        runAsGroup: 1001
-        fsGroup: 1001
+        runAsGroup: www-data
+        fsGroup: www-data
 
 ---
 # service.yaml
