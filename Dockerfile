@@ -53,9 +53,7 @@ COPY ./.infrastructures/nginx/default.conf /etc/nginx/nginx.conf
 COPY ./.infrastructures/nginx/nginx-custom.conf /etc/nginx/conf.d/default.conf
 COPY ./.infrastructures/supervisord/supervisord.conf /etc/supervisord.conf
 
-RUN addgroup -S 1001 && \
-    addgroup www-data 1001 && \
-    curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer \
+RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer \
     && cp .env.example .env \
     && composer install --no-dev --no-scripts \
     && composer clear-cache \
