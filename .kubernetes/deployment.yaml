@@ -20,6 +20,26 @@ spec:
         - name: files-volume
           persistentVolumeClaim:
             claimName: file-storage-service-pvc
+      initContainers:
+        - name: change-owner
+          image: busybox:latest
+          command:
+          - /bin/chown
+          - -R
+          - "82:82"
+          - /usr/share/nginx/html/storage/app/files
+          - /usr/share/nginx/html/storage/app/temps
+          - /usr/share/nginx/html/storage/app/zips
+          volumeMounts:
+            - name: files-volume
+              mountPath: /usr/share/nginx/html/storage/app/files
+              subPath: files
+            - name: files-volume
+              mountPath: /usr/share/nginx/html/storage/app/temps
+              subPath: temps
+            - name: files-volume
+              mountPath: /usr/share/nginx/html/storage/app/zips
+              subPath: zips
       containers:
         - name: file-storage-service-backend
           image: $secrets.REGISTRY_URL/file-storage-service-backend:latest
