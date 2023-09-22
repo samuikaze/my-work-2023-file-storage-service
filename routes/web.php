@@ -29,5 +29,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         $router->post('/file/chunk', 'FileController@chunkUploadFile');
         // 合併分塊
         $router->post('/file/chunk/merge', 'FileController@mergeChunks');
+        // 刪除檔案
+        $router->delete('/file/{folder}/{filename}', 'FileController@deleteFile');
     });
 });
