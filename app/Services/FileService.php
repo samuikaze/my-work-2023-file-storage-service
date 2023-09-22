@@ -224,6 +224,33 @@ class FileService
     }
 
     /**
+     * 刪除檔案
+     *
+     * @param string $folder 資料夾名稱
+     * @param string $filename 檔案名稱
+     * @return int
+     *
+     * @throws \App\Exceptions\EntityNotFoundException
+     * @throws \App\Exceptions\IOException
+     */
+    public function deleteFile(string $folder, string $filename): int
+    {
+        $file = $this->file_repository->getSingleFileByFilename($folder, $filename);
+        if (is_null($file)) {
+            throw new EntityNotFoundException('找不到檔案');
+        }
+
+        $result = $this->removeFile(Utils::composePath(PathType::SAVE_PATH, $file->folder, $file->filename), true);
+        if (! $result) {
+            throw new IOException('移除檔案失敗');
+        }
+
+        $effected = $this->file_repository->safeDelete($file->id);
+
+        return $effected;
+    }
+
+    /**
      * 取得檔案資訊
      *
      * @param string $folder 資料夾名稱
@@ -416,5 +443,34 @@ class FileService
         }
 
         return true;
+    }
+
+    /**
+     * 移除檔案
+     *
+     * @param string $path 檔案路徑
+     * @param bool $remove_folder 是否連同資料夾一起移除 (若資料夾內仍有檔案則此參數無效)
+     * @return bool 移除成功或失敗
+     */
+    protected function removeFile(string $path, bool $remove_folder = false): bool
+    {
+        if (! File::exists($path)) {
+            return false;
+        }
+
+        $unlink_result = unlink($path);
+
+        if ($remove_folder) {
+            $folder = explode(DIRECTORY_SEPARATOR, $path);
+            array_pop($folder);
+            $folder = implode(DIRECTORY_SEPARATOR, $folder);
+
+            $file_count = count(array_diff(scandir($folder), ['.', '..']));
+            if ($file_count === 0) {
+                rmdir($folder);
+            }
+        }
+
+        return $unlink_result;
     }
 }

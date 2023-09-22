@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exceptions\EntityNotFoundException;
 use App\Exceptions\IOException;
 use App\Services\FileService;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -469,5 +470,83 @@ class FileController extends Controller
         }
 
         return $this->streamResponse($zip_path, $request_zip_name);
+    }
+
+    /**
+     * 刪除檔案
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     *
+     * @OA\Delete(
+     *   path="/file/{folder}/{filename}",
+     *   summary="刪除檔案",
+     *   tags={"FileStorage v1"},
+     *   security={{ "apiAuth": {} }},
+     *   @OA\Parameter(
+     *     name="folder",
+     *     in="path",
+     *     required=true,
+     *     @OA\Schema(
+     *       type="string",
+     *       example="testfolder"
+     *     )
+     *   ),
+     *   @OA\Parameter(
+     *     name="filename",
+     *     in="path",
+     *     required=true,
+     *     @OA\Schema(
+     *       type="string",
+     *       example="test.jpg"
+     *     )
+     *   ),
+     *   @OA\Response(
+     *     response="200",
+     *     description="成功刪除檔案"
+     *   ),
+     *   @OA\Response(
+     *     response="400",
+     *     description="未給出檔案名稱或找不到檔案",
+     *   ),
+     *   @OA\Response(
+     *     response="500",
+     *     description="刪除檔案過程中發生不可預期的錯誤",
+     *   )
+     * )
+     */
+    public function deleteFile(string $folder, string $filename): JsonResponse
+    {
+        $validation = [
+            'folder' => $folder,
+            'filename' => $filename,
+        ];
+        $validator = Validator::make($validation, [
+            'folder' => ['required', 'string', 'uuid'],
+            'filename' => ['required', 'string'],
+        ]);
+
+        if ($validator->fails()) {
+            return $this->response(
+                error: '找不到該檔案',
+                status: self::HTTP_BAD_REQUEST
+            );
+        }
+
+        try {
+            $this->file_service->deleteFile($folder, $filename);
+        } catch (EntityNotFoundException $e) {
+            return $this->response(
+                error: '找不到該檔案',
+                status: self::HTTP_BAD_REQUEST
+            );
+        } catch (Exception $e) {
+            return $this->response(
+                error: '移除檔案發生問題，請聯絡管理員協助解決問題',
+                status: self::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+
+        return $this->response();
     }
 }
